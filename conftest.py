@@ -1,5 +1,6 @@
 import pytest
 import allure
+import selenium.webdriver.firefox.service
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as Options_chrome
 from selenium.webdriver.firefox.options import Options as Options_firefox
@@ -27,11 +28,15 @@ def driver(request):
         request.cls.driver = driver
     elif browser_name == "firefox":
         options_firefox = Options_firefox()
+        firefox_bin = "/snap/firefox/current/usr/lib/firefox/firefox"
+        firefoxdriver_bin = "/snap/firefox/current/usr/lib/firefox/geckodriver"
+        options_firefox.binary_location = firefox_bin
         options_firefox.add_argument("--headless")
         options_firefox.add_argument("--disable-cache")
         options_firefox.add_argument('--ignore-certificate-errors')
+        service = selenium.webdriver.firefox.service.Service(executable_path=firefoxdriver_bin)
         print("\nstart Firefox browser for test..")
-        driver = webdriver.Firefox(options=options_firefox)
+        driver = webdriver.Firefox(service=service, options=options_firefox)
         request.cls.driver = driver
     else:
         raise pytest.UsageError("--browser_name should be chrome or firefox")

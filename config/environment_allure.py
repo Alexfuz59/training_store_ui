@@ -1,9 +1,19 @@
+import platform
+
+
 class EnvironmentAllure:
+
+    environment = {'OC': platform.platform(),
+                   'Python_version': platform.python_version(),
+                   'Allure-report.version': '2.23.1'
+                   }
+
     @staticmethod
-    def create_environment(browser):
+    def create_environment(browser, env=environment):
         with open('environment.properties', 'w', encoding='utf-8') as file:
-            file.write("allure-report.version = 2.23.1" + '\n'+"python_version=3.12" + '\n')
+            for key, value in env.items():
+                file.write(f'{key}: {value}' + '\n')
             if browser == "chrome":
-                file.write("browser=Chrome")
+                file.write("Browser: Chrome")
             elif browser == "firefox":
-                file.write("browser=Firefox")
+                file.write("Browser: Firefox")
